@@ -18,6 +18,37 @@ public class BoardRepositoryTest { // 클래스명은 Test 붙여서 짓는다 (
     private BoardRepository boardRepository;
 
     @Test
+    public void findByTitle_test() {
+        //given
+        String title = "제목1";
+        //when
+        Board board = boardRepository.findByTitle(title);
+        //eye
+        System.out.println(board.getUser().getId());
+
+    }
+
+    @Test
+    public void findByIdV2_test() {
+        //given
+        int id = 1;
+
+        Board board = boardRepository.findByIdV2(id);
+        // board를 조회하면서 user의 정보를 들고 오지만
+        // 영속객체로 등록할 때, 별칭으로 필드이름이 지어지기 때문에 꺼내쓸 수 없다.
+        // 그래서 아래 매서드에서 select 가 한번 더 실행된다.
+        System.out.println(board.getUser());
+
+
+/*        //when
+        Board board = boardRepository.findByIdV2(id);
+        Board board2 = boardRepository.findByIdV2(id);
+        //eye
+        System.out.println(board.getUser().getUsername());
+        System.out.println(board2.getUser().getUsername()); // 하이버네이트에서 가져오기 때문에 여기서 select 실행안됨 ?*/
+    }
+
+    @Test
     public void updateById_test() {
         //given
         int id = 1;
@@ -81,15 +112,25 @@ public class BoardRepositoryTest { // 클래스명은 Test 붙여서 짓는다 (
         // findAll 매서드에는 매개변수가 필요없으니 비워둔다.
 
         // when
+        System.out.println("1. 첫번째 조회");
         List<Board> boardList = boardRepository.findAll();
+        System.out.println("userId : " + boardList.get(0).getUser().getId());
+        System.out.println("==============");
 
-        // eye -> sour 해서 본다
-        System.out.println("사이즈 : " + boardList.size());
-        for (Board board : boardList) {
-            System.out.println(board.getTitle());
-            System.out.println(board.getContent());
+        // eye
+        System.out.println("2. 레이지 로딩"); // 목록에는 필요없고 상세보기 할 때 필요하다
 
-        }
+        // select 1번 하는 경우
+        //System.out.println("username : " + boardList.get(0).getUser().getUsername());
+        //System.out.println("username : " + boardList.get(1).getUser().getUsername());
+        //System.out.println("username : " + boardList.get(2).getUser().getUsername());
+
+
+        // select 2번 하는 경우
+        System.out.println("username : " + boardList.get(0).getUser().getUsername());
+        System.out.println("username : " + boardList.get(4).getUser().getUsername());
+
+
     }
 
     // 테스트 매서드에서는 매개변수를 사용할 수 없다.
@@ -97,7 +138,7 @@ public class BoardRepositoryTest { // 클래스명은 Test 붙여서 짓는다 (
     @Test
     public void save_test() { // 매서드명_test 로 매서드 이름을 짓는다 (컨벤션)
         // given (매개변수를 강제로 만들기)
-        String title = null;
+        String title = "제목1";
         String content = "내용1";
 
         // when

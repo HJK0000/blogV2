@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shop.mtcoding.blog.user.User;
 
 import java.sql.Timestamp;
 
@@ -25,6 +26,12 @@ public class Board {
     private String content;
     private Timestamp createdAt;
 
+
+    // fk
+    @ManyToOne(fetch = FetchType.LAZY)
+    // user 조회를 안한다. fk로 1을 들고있으니까 user 에 id만 넣어서 객체생성
+    // eager 로 하면 user 조회한다. user객체의 모든 정보를 조회해서 넣어둔다.
+    private User user;
 
     @Builder
     public Board(Integer id, String title, String content, Timestamp createdAt) {
