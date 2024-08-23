@@ -142,7 +142,9 @@ public class BoardRepositoryTest { // 클래스명은 Test 붙여서 짓는다 (
         String content = "내용1";
 
         // when
-        boardRepository.save(title, content);
+        //boardRepository.save(title, content);
+
+        // eye (눈으로 확인)
 
         // eye(눈으로 확인)
 

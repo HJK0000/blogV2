@@ -3,19 +3,20 @@ package shop.mtcoding.blog.board;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import shop.mtcoding.blog.core.error.ex.Exception404;
 import shop.mtcoding.blog.user.User;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Repository // @Repository를 붙이면 스프링이 new를 해서 IoC(컬렉션 List자료형 같은거)에 저장한다. - inversion of container
 public class BoardRepository {
 
-    @Autowired // IoC에 있는 객체를 찾아온다.
-    private EntityManager em;
+    private final EntityManager em;
 
     public Board findByTitle(String title) {
         Query query = em.createNativeQuery("select * from board_tb where title = ?");
@@ -86,7 +87,7 @@ public class BoardRepository {
         // 아래서 left 조인 하려면 left join fetch 쓰면 된다.
         // jpql 은 ? 안쓰고 : 씀
         Query query = em.createQuery("select b from Board b join fetch b.user where b.id = :id", Board.class); // .Board.class 해주면 하이버네이트가 ob 해준다. 내가 파싱안해도 된다. relation도 해준다.
-        query.setParameter("id", id); // 1-> "id"
+        query.setParameter("id", id);
 
         try {
             Board board = (Board) query.getSingleResult(); // (Board)로 다운캐스팅을 해줘야 에러가 안난다.
@@ -94,7 +95,7 @@ public class BoardRepository {
         } catch (Exception e) {
             e.printStackTrace(); // 추가
             // 익셉션을 내가 잡은 것까지 배움 - 처리 방법은 v2에서 배우기 (터트리는건 내가..throw로 터트림!)
-            throw new RuntimeException("게시글 id를 찾을 수 없습니다");
+            throw new Exception404("게시글 id를 찾을 수 없습니다");
         }
 
 
@@ -110,7 +111,7 @@ public class BoardRepository {
         } catch (Exception e) {
             e.printStackTrace();
             // 익세션을 내가 잡은것 까지 배움 - 처리 방법은 v2에서 배우기
-            throw new RuntimeException("게시글 id를 찾을 수 없습니다");
+            throw new Exception404("게시글 id를 찾을 수 없습니다");
         }
     }
 
@@ -128,15 +129,8 @@ public class BoardRepository {
 
     // insert 하기
     @Transactional // 변경요청할 때는 transactional을 붙여줘야한다.
-    public void save(String title, String content) {
-        Query query = em.createNativeQuery("insert into board_tb(title, content, created_at) values(?,?,now())");
-        query.setParameter(1, title); // position = ?의 순서
-        query.setParameter(2, content);
-
-        query.executeUpdate(); //insert, delete 등 wrtie 할때는 executeUpdate
-
+    public void save(Board board) {
+        em.persist(board);
     }
     // transational이 끝나기전에는 이 데이터가 안보인다.
-
-
 }
