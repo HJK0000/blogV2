@@ -6,8 +6,8 @@
     {{#model.isOwner}}
         <!-- 수정삭제버튼 -->
         <div class="d-flex justify-content-end">
-            <a href="/board/{{model.boardId}}/update-form" class="btn btn-warning me-1">수정</a>
-            <form action="/board/{{model.boardId}}/delete" method="post">
+            <a href="/api/board/{{model.boardId}}/update-form" class="btn btn-warning me-1">수정</a>
+            <form action="/api/board/{{model.boardId}}/delete" method="post">
                 <button class="btn btn-danger">삭제</button>
             </form>
         </div>

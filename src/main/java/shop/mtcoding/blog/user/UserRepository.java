@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.blog.core.error.ex.Exception401;
 
 import java.sql.Timestamp;
@@ -57,7 +56,6 @@ public class UserRepository {
 
     // repository 에는 기능명을 넣지말자
     // join 이라고 하지말고 save 로 짓기
-    @Transactional
     public void save(User user) { // 1. 비영속 user
         System.out.println("담기기전 : " + user.getId()); // 이때 id 는 null
         /*

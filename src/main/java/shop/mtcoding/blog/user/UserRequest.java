@@ -1,5 +1,8 @@
 package shop.mtcoding.blog.user;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 // 내부클래스로 관리!!
@@ -8,8 +11,12 @@ public class UserRequest {
     @Data // getter, setter, tostring 들고 있음
     public static class joinDTO {
         // static 이니까 new 하기전에 이 클래스는 static 에 뜬다.
+        @NotEmpty
         private String username;
+        @NotEmpty
         private String password;
+        @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식으로 작성해주세요")
+        @NotEmpty
         private String email;
 
         // 매서드 만들기
@@ -26,7 +33,10 @@ public class UserRequest {
     @Data // getter, setter, tostring 들고 있음
     public static class loginDTO {
         // static 이니까 new 하기전에 이 클래스는 static 에 뜬다.
+        @Size(min = 2, max = 4) // 최소 2자, 최대 4자
+        @NotEmpty
         private String username;
+        @NotEmpty
         private String password;
     }
 }

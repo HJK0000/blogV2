@@ -1,0 +1,15 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div id="result"></div>
+
+<script>
+    let movie = $('#movieCd').val();
+    console.log(movie);
+    $.ajax({
+        method: "GET",
+        url: "http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=82ca741a2844c5c180a208137bb92bd7&targetDt=20120101",
+    }).done(function (msg) {
+        let movieInfo = msg.movieInfoResult.movieInfo;
+        console.log(movieInfo);
+    })
+
+</script>

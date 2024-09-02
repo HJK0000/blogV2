@@ -5,7 +5,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.blog.core.error.ex.Exception404;
 import shop.mtcoding.blog.user.User;
 
@@ -53,8 +52,6 @@ public class BoardRepository {
 
     }
 
-
-    @Transactional
     public void updateById(String title, String content, int id) {
         Query query = em.createNativeQuery("update board_tb set title = ?, content = ? where id = ?"); // where 뒤에오는 id는 url로 받아오고, set 뒤에오는 title, content는 body에 담아서 가져와라! (뷰)
 
@@ -72,7 +69,6 @@ public class BoardRepository {
     // 트렌젝션을 거는순간 다른 write 작업이 느려짐
     // 삭제하기 전 조회해서 있는지 먼저 확인하기 수정하거나 삭제할 수 있다.!!!
     // 쓸데없는 트렌젝션이 걸리면 느려진다...
-    @Transactional
     public void deleteById(int id) {
         Query query = em.createNativeQuery("delete from board_tb where id = ?"); // Board.class는 조회할 때만 적어준다.
         query.setParameter(1, id);
@@ -128,7 +124,6 @@ public class BoardRepository {
     }
 
     // insert 하기
-    @Transactional // 변경요청할 때는 transactional을 붙여줘야한다.
     public void save(Board board) {
         em.persist(board);
     }

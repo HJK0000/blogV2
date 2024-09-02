@@ -18,11 +18,42 @@ public class BoardService {
     // DI 생성자 주입
     private final BoardRepository boardRepository;
 
-    // 수정하기
-    // 게시글 목록보기 해보기
-
     // v3 페이징이랑 댓글쓰기, 검색 배울예정
     // 파이어베이스, 몽고디비, 웹소켓
+
+
+    // 더티체킹
+    // 모아두었다가 한꺼번에 실행하는 것
+    // 가바지컬렉 어쩌고도 한꺼번에 실행함
+    @Transactional
+    public void 게시글수정(int id, BoardRequest.UpdateDTO updateDTO, User sessionUser) {
+
+        // 1, 게시글 조회 (없으면 404) - 생각이 안나면 나중에 추가할 수 있다.
+        Board board = boardRepository.findById(id); // 조회한 board 객체를 영속화 함
+        // 2. 권한체크
+        if (board.getUser().getId() != sessionUser.getId()) {
+            throw new Exception403("게시글을 수정할 권한이 없습니다.");
+        }
+        // 3. 게시글 수정
+        board.setTitle(updateDTO.getTitle()); // 수정 
+        board.setContent(updateDTO.getContent());
+        // 트렌젝션 종료됨, 그러면
+        // pc에 뭐가 변경되었는지 확인하는 변경감지 로직이 실행됨
+        // 변경된것들만 골라내서 db에 flush -> 트랜젝션이 종료되면서 한방에 update 함!!!
+    } // flush() 자동 호출됨 (더티체킹)
+
+    public Board 게시글수정화면가기(int id, User sessionUser) {
+
+        Board board = boardRepository.findById(id); // repository 에서 터트렸기 때문에 무조건 값이 들어옴
+        // 권한 체크
+        if (board.getUser().getId() != sessionUser.getId()) {
+            throw new Exception403("게시글을 수정할 권한이 없습니다.");
+        }
+
+        return board;
+
+    }
+
 
     public List<Board> 게시글목록보기() { // 나중에 페이징 처리하는거 여기 추가할 예정
         List<Board> boardList = boardRepository.findAll();

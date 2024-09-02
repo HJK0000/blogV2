@@ -4,7 +4,7 @@
     <div class="card">
         <div class="card-header"><b>글수정하기 화면입니다</b></div>
         <div class="card-body">
-            <form action="/board/{{model.id}}/update" method="post">
+            <form action="/api/board/{{model.id}}/update" method="post">
 
                 <input type="hidden" name="id" value="{{model.id}}">
                 <!--이렇게 쓰는 사람도 있다. 근데 where 절에 걸리는건 body에 안적고 path에 넣어서 넘겨준다..-->

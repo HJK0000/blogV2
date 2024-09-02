@@ -1,5 +1,6 @@
 package shop.mtcoding.blog.board;
 
+import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,36 @@ public class BoardRepositoryTest { // 클래스명은 Test 붙여서 짓는다 (
     @Autowired
     private BoardRepository boardRepository;
 
+    @Autowired
+    private EntityManager em;
+
+    @Test
+    public void updateByIdV2_test() {
+
+        // given
+        // 조회먼저
+        int id = 1;
+        Board board = boardRepository.findById(id);
+        Board board1 = boardRepository.findById(id);
+
+
+        // when
+        // 조회된 board를 수정하기
+        board.setTitle("제목10");
+        board.setContent("내용10");
+
+        // 트랜젝션이 종료되면 flush()
+        em.flush();
+    }
+
+
     @Test
     public void findByTitle_test() {
         //given
         String title = "제목1";
         //when
         Board board = boardRepository.findByTitle(title);
+
         //eye
         System.out.println(board.getUser().getId());
 
